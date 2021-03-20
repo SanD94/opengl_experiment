@@ -26,13 +26,14 @@ struct vec {
 
     template<typename... T>
     vec(T... vals) {
-        static_assert(N == sizeof...(vals));
-        v = std::vector<float>{{vals...}};
+        static_assert(N == sizeof...(vals), "[vec] Parameter size should be N");
+        v = std::vector<float>{vals...};
     }
+    
 
-    vec(const vec &v) : v(v.v) {}
+    vec(const vec& v) : v(v.v) {}
+    vec(const std::vector<float>& _v) : v(_v) {}
 
-    vec(const std::vector<float> _v) : v(_v) {}
 
     float &operator[](int i) { return v[i]; } // lvalue
     const float operator[](int i) const { return v[i]; } // rvalue
