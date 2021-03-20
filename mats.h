@@ -25,7 +25,6 @@ private:
     template<int curm, int curv, typename T>
     void vec_generate(std::vector<T> &v) {
         m[curm] = vec<N>(v);
-        return;
     }
     
     // vector generator recursion for float
@@ -82,6 +81,12 @@ public:
         else if constexpr (std::conjunction_v<std::is_same<vec<N>, Ts>...>)
             mat_vec(vals...);
     }
+
+
+    mat(const mat<N>& m) : m(m.m) {}
+
+    vec<N>& operator [] (int i) { return m[i]; }
+    const vec<N>& operator [] (int i) const { return m[i]; }
     
     void print() {
         std::cout << m.size() << std::endl;

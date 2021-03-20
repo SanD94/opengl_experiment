@@ -10,8 +10,8 @@ int main() {
     vec<2> v(float(10), float(1000));
     mat<2> x(s,v);
     mat<2> yy(float(10), float(20), float(30), float(40));
+    mat<2> qq(yy);
     
-    yy.print();
     //
 
     return 0;
