@@ -26,7 +26,7 @@ struct vec {
 
     template<typename... T>
     vec(T... vals) {
-        static_assert(N == sizeof...(vals), "[vec] Parameter size should be N");
+        static_assert(N == sizeof...(vals), "[vec] : Parameter size should be N");
         v = std::vector<float>{vals...};
     }
     
@@ -93,6 +93,12 @@ struct vec {
         return *this;
     }
     
+    vec& operator *= (const float s) {
+        std::transform(v.begin(), v.end(), v.begin(),
+                [s](float x) -> float {return s * x;});
+        return *this;
+    }
+    
     vec& operator /= (const float s) {
         float r = 1.0 / s;
         *this *= r;
@@ -133,7 +139,7 @@ inline float length (const vec<N>& v) {
 }
 
 template <int N>
-inline float normalize (const vec<N>& v) {
+inline vec<N> normalize (const vec<N>& v) {
     return v / length(v);
 }
 
