@@ -1,5 +1,6 @@
 #ifndef __VEC_H__
 #define __VEC_H__
+#define _USE_MATH_DEFINES
 
 #include <iostream>
 #include <vector>
@@ -27,12 +28,21 @@ struct vec {
     template<typename... T>
     vec(T... vals) {
         static_assert(N == sizeof...(vals), "[vec] : Parameter size should be N");
-        v = std::vector<float>{vals...};
+        v = std::vector<float>{static_cast<float>(vals)...};
     }
     
 
     vec(const vec& v) : v(v.v) {}
     vec(const std::vector<float>& _v) : v(_v) {}
+    
+    template<int I, typename... T>
+    vec(const vec<I>& _v, T... vals) {
+        static_assert(N == I + sizeof...(vals), "[vec]: Total parameter size should be N");
+        auto rest = std::vector<float>{static_cast<float>(vals)...};
+        v = std::vector<float>(N);
+        std::copy(_v.v.begin(), _v.v.end(), v.begin());
+        std::copy(rest.begin(), rest.end(), v.begin() + I);
+    }
 
 
     float &operator[](int i) { return v[i]; } // lvalue
