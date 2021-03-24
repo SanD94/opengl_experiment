@@ -65,17 +65,21 @@ public:
         for(int i = 0; i < N; i++)
             m[i][i] = d;
     }
-    
-    
-    template<typename... Ts>
-    mat(const Ts&... vals) {
-        if constexpr (std::conjunction_v<std::is_floating_point<Ts>...> || 
-            std::conjunction_v<std::is_integral<Ts>...>)
-            mat_float(static_cast<float>(vals)...);
-        else if constexpr (std::conjunction_v<std::is_same<vec<N>, Ts>...>)
-            mat_vec(vals...);
-    }
 
+    template<typename... Fs, 
+        std::enable_if_t<std::conjunction_v<std::is_arithmetic<Fs>...>, bool> = true
+    >
+    mat(const Fs&... vals) {
+        mat_float(static_cast<float>(vals)...);
+    }
+    
+    template<typename... Vs,
+        std::enable_if_t<std::conjunction_v<std::is_same<vec<N>, Vs>...>, bool> = true
+    >
+    mat(const Vs&... vals) {
+        mat_vec(vals...);
+    }
+    
 
     mat(const mat<N>& m) : m(m.m) {}
     mat(const std::vector<vec<N>>& _m) : m(_m) {}
