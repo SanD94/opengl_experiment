@@ -1,8 +1,4 @@
-#include <iostream>
-#include "vec.h"
-#include "mat.h"
-
-using namespace std;
+#include "sand.h"
 
 int main() {
     vec<2> s(20, 10);
@@ -11,10 +7,10 @@ int main() {
     mat<2> yy(10.0, 20, 30, 40);
     mat<2> qq(yy);
     
-    cout << x << endl;
-    cout << yy << endl;
+    std::cout << x << std::endl;
+    std::cout << yy << std::endl;
     //
-    cout << qq[0][0] << endl;
+    std::cout << qq[0][0] << std::endl;
 
     return 0;
 }

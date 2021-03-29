@@ -1,14 +1,9 @@
 #ifndef __VEC_H__
 #define __VEC_H__
-#define _USE_MATH_DEFINES
 
-#include <iostream>
-#include <vector>
-#include <functional>
-#include <algorithm>
-#include <iterator>
-#include <cmath>
-#include <numeric>
+#include "sand.h"
+
+namespace Sand {
 
 template<typename T>
 std::ostream& operator << (std::ostream& os, const std::vector<T> v) {
@@ -164,5 +159,6 @@ inline vec<3> cross(const vec<N>&u, const vec<N>&v) {
 }
 
 
+} // namespace Sand
 
-#endif       
+#endif  // __VEC_H__

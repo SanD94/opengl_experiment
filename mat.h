@@ -4,8 +4,7 @@
 #include "vec.h"
 #include <type_traits>
 
-const float DegreesToRadians = M_PI / 180.0;
-
+namespace Sand {
     
 
 template<int N>
@@ -351,6 +350,8 @@ inline mat<3> Normal( const mat<4>& c) {
     
     return d;
 }
+
+} // namespace Sand
 
 
 #endif // __MAT_H__
