@@ -38,7 +38,7 @@ private:
         static_assert(N * N == sizeof...(vals),
              "The number of parameters should be N square.");
         m = std::vector<vec<N>>(N);
-        auto v = std::vector<float>(N);
+        auto v = std::vector<GLfloat>(N);
         vec_generate<0, 0>(v, vals...); 
     }
 
@@ -59,7 +59,7 @@ public:
     //  --- Constructors and Destructors ---
     //
 
-    mat(const float d = float(1.0))  { // Diagonal
+    mat(const GLfloat d = GLfloat(1.0))  { // Diagonal
         m = std::vector<vec<N>>(N);
         for(int i = 0; i < N; i++)
             m[i][i] = d;
@@ -69,7 +69,7 @@ public:
         std::enable_if_t<std::conjunction_v<std::is_arithmetic<Fs>...>, bool> = true
     >
     mat(const Fs&... vals) {
-        mat_float(static_cast<float>(vals)...);
+        mat_float(static_cast<GLfloat>(vals)...);
     }
     
     template<typename... Vs,
@@ -105,14 +105,14 @@ public:
         return mat(res);
     }
 
-    mat operator * (const float s) const {
+    mat operator * (const GLfloat s) const {
         std::vector<vec<N>> res(N);
         std::transform(m.begin(), m.end(), res.begin(),
                 [s](vec<N> v) -> vec<N> { return s * v; });
         return mat(res);
     }
 
-    friend mat operator * (const float s, const mat m)
+    friend mat operator * (const GLfloat s, const mat m)
     { return m * s; }
 
     mat operator * (const mat& _m) const {
@@ -125,14 +125,14 @@ public:
     }
 
     vec<N> operator * (const vec<N>& v) const {
-        std::vector<float> res(N);
+        std::vector<GLfloat> res(N);
         std::transform(m.m.begin(), m.m.end(), res.begin(),
-                [v](vec<N> _v) -> float { return dot(v, _v); });
+                [v](vec<N> _v) -> GLfloat { return dot(v, _v); });
         return vec(res);
     }
 
-    mat operator / (const float s) const {
-        float r  = float(1.0) / s;
+    mat operator / (const GLfloat s) const {
+        GLfloat r  = GLfloat(1.0) / s;
         return *this * r;
     }
 
@@ -147,14 +147,14 @@ public:
         return *this;
     }
 
-    mat& operator *= (const float s) {
+    mat& operator *= (const GLfloat s) {
         std::transform(m.begin(), m.end(), m.begin(),
                 [s](vec<N> v) -> vec<N> { return s * v; });
         return *this;
     }
 
-    mat& operator /= (const float s) {
-        float r = float(1.0) / s;
+    mat& operator /= (const GLfloat s) {
+        GLfloat r = GLfloat(1.0) / s;
         return *this *= r;
     }
 
@@ -172,12 +172,12 @@ public:
     
     // Conversion operators
 
-    operator const float* () const {
-        return static_cast<const float*>(&m[0][0]);
+    operator const GLfloat* () const {
+        return static_cast<const GLfloat*>(&m[0][0]);
     }
 
-    operator float* () const {
-        return static_cast<float*>(&m[0][0]);
+    operator GLfloat* () const {
+        return static_cast<GLfloat*>(&m[0][0]);
     }
 };
 
@@ -204,8 +204,8 @@ inline mat<N> transpose(const mat<N>& A) {
 #define Error(str) std::cerr << "[" __FILE__ ":" << __LINE__ << "] " \
     << str << std::endl
 
-inline mat<4> RotateX(const float theta) {
-    float angle = DegreesToRadians * theta;
+inline mat<4> RotateX(const GLfloat theta) {
+    GLfloat angle = DegreesToRadians * theta;
     mat<4> c;
     c[2][2] = c[1][1] = cos(angle);
     c[2][1] = sin(angle);
@@ -213,8 +213,8 @@ inline mat<4> RotateX(const float theta) {
     return c;
 }
 
-inline mat<4> RotateY(const float theta) {
-    float angle = DegreesToRadians * theta;
+inline mat<4> RotateY(const GLfloat theta) {
+    GLfloat angle = DegreesToRadians * theta;
 
     mat<4> c;
     c[2][2] = c[0][0] = cos(angle);
@@ -223,8 +223,8 @@ inline mat<4> RotateY(const float theta) {
     return c;
 }
 
-inline mat<4> RotateZ(const float theta) {
-    float angle = DegreesToRadians * theta;
+inline mat<4> RotateZ(const GLfloat theta) {
+    GLfloat angle = DegreesToRadians * theta;
     mat<4> c;
     c[0][0] = c[1][1] = cos(angle);
     c[1][0] = sin(angle);
@@ -232,7 +232,7 @@ inline mat<4> RotateZ(const float theta) {
     return c;
 }
 
-inline mat<4> Translate(const float x, const float y, const float z) {
+inline mat<4> Translate(const GLfloat x, const GLfloat y, const GLfloat z) {
     mat<4> c;
     c[0][3] = x; c[1][3] = y; c[2][3] = z;
     return c;
@@ -247,7 +247,7 @@ inline mat<4> Translate(const vec<4>& v) {
 }
 
 
-inline mat<4> Scale(const float x, const float y, const float z) {
+inline mat<4> Scale(const GLfloat x, const GLfloat y, const GLfloat z) {
     mat<4> c;
     c[0][0] = x;
     c[1][1] = y;
@@ -264,9 +264,9 @@ inline mat<4> Scale(const vec<3>& v) {
 
 
 
-inline mat<4> Ortho( const float left, const float right,
-           const float bottom, const float top,
-           const float zNear, const float zFar ) {
+inline mat<4> Ortho( const GLfloat left, const GLfloat right,
+           const GLfloat bottom, const GLfloat top,
+           const GLfloat zNear, const GLfloat zFar ) {
     mat<4> c;
     c[0][0] = 2.0/(right - left);
     c[1][1] = 2.0/(top - bottom);
@@ -278,14 +278,14 @@ inline mat<4> Ortho( const float left, const float right,
     return c;
 }
 
-inline mat<4> Ortho2D( const float left, const float right,
-             const float bottom, const float top ) {
+inline mat<4> Ortho2D( const GLfloat left, const GLfloat right,
+             const GLfloat bottom, const GLfloat top ) {
     return Ortho( left, right, bottom, top, -1.0, 1.0 );
 }
 
-inline mat<4> Frustum( const float left, const float right,
-             const float bottom, const float top,
-             const float zNear, const float zFar ) {
+inline mat<4> Frustum( const GLfloat left, const GLfloat right,
+             const GLfloat bottom, const GLfloat top,
+             const GLfloat zNear, const GLfloat zFar ) {
     mat<4> c;
     c[0][0] = 2.0*zNear/(right - left);
     c[0][2] = (right + left)/(right - left);
@@ -298,10 +298,10 @@ inline mat<4> Frustum( const float left, const float right,
     return c;
 }
 
-inline mat<4> Perspective( const float fovy, const float aspect,
-                 const float zNear, const float zFar) {
-    float top   = tan(fovy*DegreesToRadians/2) * zNear;
-    float right = top * aspect;
+inline mat<4> Perspective( const GLfloat fovy, const GLfloat aspect,
+                 const GLfloat zNear, const GLfloat zFar) {
+    GLfloat top   = tan(fovy*DegreesToRadians/2) * zNear;
+    GLfloat right = top * aspect;
     
     mat<4> c;
     c[0][0] = zNear/right;
@@ -320,8 +320,8 @@ inline mat<4> Perspective( const float fovy, const float aspect,
 
 inline mat<4> LookAt( const vec<4>& eye, const vec<4>& at, const vec<4>& up ) {
     vec<4> n = normalize(eye - at);
-    vec<4> u = vec<4>(normalize(cross(up,n)), float(0.0));
-    vec<4> v = vec<4>(normalize(cross(n,u)), float(0.0));
+    vec<4> u = vec<4>(normalize(cross(up,n)), GLfloat(0.0));
+    vec<4> v = vec<4>(normalize(cross(n,u)), GLfloat(0.0));
     vec<4> t = vec<4>(0.0, 0.0, 0.0, 1.0);
     mat<4> c = mat<4>(u, v, n, t);
     return c * Translate( -eye );
@@ -333,7 +333,7 @@ inline mat<4> LookAt( const vec<4>& eye, const vec<4>& at, const vec<4>& up ) {
 //
 inline mat<3> Normal( const mat<4>& c) {
     mat<3> d;
-    float det;
+    GLfloat det;
     
     det = c[0][0]*c[1][1]*c[2][2]+c[0][1]*c[1][2]*c[2][1]+c[0][2]*c[1][0]*c[2][1]
     -c[2][0]*c[1][1]*c[0][2]-c[1][0]*c[0][1]*c[2][2]-c[0][0]*c[1][2]*c[2][1];

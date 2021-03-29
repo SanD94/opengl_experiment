@@ -14,72 +14,72 @@ std::ostream& operator << (std::ostream& os, const std::vector<T> v) {
 
 template <int N>
 struct vec {
-    std::vector<float> v;
+    std::vector<GLfloat> v;
 
-    vec(float s = float(0.0)) {
-        v = std::vector<float>(N, s);
+    vec(GLfloat s = GLfloat(0.0)) {
+        v = std::vector<GLfloat>(N, s);
     }
 
     template<typename... T>
     vec(T... vals) {
         static_assert(N == sizeof...(vals), "[vec] : Parameter size should be N");
-        v = std::vector<float>{static_cast<float>(vals)...};
+        v = std::vector<GLfloat>{static_cast<GLfloat>(vals)...};
     }
     
 
     vec(const vec& v) : v(v.v) {}
-    vec(const std::vector<float>& _v) : v(_v) {}
+    vec(const std::vector<GLfloat>& _v) : v(_v) {}
     
     template<int I, typename... T>
     vec(const vec<I>& _v, T... vals) {
         static_assert(N == I + sizeof...(vals), "[vec]: Total parameter size should be N");
-        auto rest = std::vector<float>{static_cast<float>(vals)...};
-        v = std::vector<float>(N);
+        auto rest = std::vector<GLfloat>{static_cast<GLfloat>(vals)...};
+        v = std::vector<GLfloat>(N);
         std::copy(_v.v.begin(), _v.v.end(), v.begin());
         std::copy(rest.begin(), rest.end(), v.begin() + I);
     }
 
 
-    float &operator[](int i) { return v[i]; } // lvalue
-    const float operator[](int i) const { return v[i]; } // rvalue
+    GLfloat &operator[](int i) { return v[i]; } // lvalue
+    const GLfloat operator[](int i) const { return v[i]; } // rvalue
 
     vec operator-() const {
-        std::vector<float> res(N);
+        std::vector<GLfloat> res(N);
         std::transform(v.begin(), v.end(), res.begin(), 
-            [](float x) -> float { return -x; });
+            [](GLfloat x) -> GLfloat { return -x; });
         return vec(res);
     }
     
     vec operator+ (const vec& _v) const { 
-        std::vector<float> res(N);
+        std::vector<GLfloat> res(N);
         std::transform(v.begin(), v.end(), _v.v.begin(), res.begin(), std::plus<>{});
         return vec(res);
     }
     
     vec operator- (const vec& _v) const {
-        std::vector<float> res(N);
+        std::vector<GLfloat> res(N);
         std::transform(v.begin(), v.end(), _v.v.begin(), res.begin(), std::minus<>{});
         return vec(res);
     }
     
-    vec operator * (const float s) const { 
-        std::vector<float> res(N);
+    vec operator * (const GLfloat s) const { 
+        std::vector<GLfloat> res(N);
         std::transform(v.begin(), v.end(), res.begin(), 
-            [s](float x) -> float { return s * x; });
+            [s](GLfloat x) -> GLfloat { return s * x; });
         return vec(res);
     }
 
     vec operator * (const vec& _v) const { 
-        std::vector<float> res(N);
+        std::vector<GLfloat> res(N);
         std::transform(v.begin(), v.end(), _v.v.begin(), res.begin(), std::multiplies<>{});
         return vec(res);
     }
     
-    friend vec operator * (const float s, const vec& v)
+    friend vec operator * (const GLfloat s, const vec& v)
     { return v * s; }
     
-    vec operator / (const float s) const {
-        float r = 1.0 / s;
+    vec operator / (const GLfloat s) const {
+        GLfloat r = 1.0 / s;
         return *this * r;
     }
     
@@ -98,14 +98,14 @@ struct vec {
         return *this;
     }
     
-    vec& operator *= (const float s) {
+    vec& operator *= (const GLfloat s) {
         std::transform(v.begin(), v.end(), v.begin(),
-                [s](float x) -> float {return s * x;});
+                [s](GLfloat x) -> GLfloat {return s * x;});
         return *this;
     }
     
-    vec& operator /= (const float s) {
-        float r = 1.0 / s;
+    vec& operator /= (const GLfloat s) {
+        GLfloat r = 1.0 / s;
         *this *= r;
         return *this;
     }
@@ -115,7 +115,7 @@ struct vec {
     }
     
     friend std::istream& operator >> (std::istream& is, vec& v) {
-        std::copy_n(std::istream_iterator<float>(is), 
+        std::copy_n(std::istream_iterator<GLfloat>(is), 
             N,
             v.v.begin());
         return is;
@@ -123,23 +123,23 @@ struct vec {
     
 
     // Conversion
-    operator const float* () const {
-        return static_cast<const float*>(&v[0]);
+    operator const GLfloat* () const {
+        return static_cast<const GLfloat*>(&v[0]);
     }
     
-    operator float* () {
-        return static_cast<float*>(&v[0]);
+    operator GLfloat* () {
+        return static_cast<GLfloat*>(&v[0]);
     }
     
 };
 
 template <int N>
-inline float dot (const vec<N>& u, const vec<N>& v) {
+inline GLfloat dot (const vec<N>& u, const vec<N>& v) {
     return std::inner_product(u.v.begin(), u.v.end(), v.v.begin(), 0);
 }
 
 template <int N>
-inline float length (const vec<N>& v) {
+inline GLfloat length (const vec<N>& v) {
     return std::sqrt(dot(v, v));
 }
 
