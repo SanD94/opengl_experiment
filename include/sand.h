@@ -26,8 +26,8 @@
 
 
 namespace Sand {
-    GLuint InitShader(const char* vertexShaderFile,
-                const char* fragmentShaderFile);
+    GLuint InitShader(const std::string& vertexShaderFile,
+                const std::string& fragmentShaderFile);
     
     const GLfloat DivideByZeroTolerance = GLfloat(1.0e-07);
     

@@ -4,7 +4,7 @@
 
 namespace Sand {
 
-	static GLchar* readShaderSource(const std::string& shaderFile) {
+	static GLchar* ReadShaderSource(const std::string& shaderFile) {
 
 		std::ifstream fin(shaderFile);
 		if (!fin.is_open()) { return NULL; }
@@ -34,7 +34,7 @@ namespace Sand {
 
 		for (int i = 0; i < 2; ++i) {
 			Shader &s = shaders[i];
-			s.source = readShaderSource(s.filename);
+			s.source = ReadShaderSource(s.filename);
 			if (shaders[i].source == NULL) {
 				std::cerr << "Failed to read " << s.filename << std::endl;
 				exit(EXIT_FAILURE);

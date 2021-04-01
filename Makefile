@@ -1,12 +1,49 @@
-LDLIBS = -lopengl32 -lglew32 -lfreeglut
+.NULL: .exe
 
-.PHONY: clean cleanall
+SOURCES = $(wildcard *.cpp)
+HEADERS = $(wildcard *.h)
+TARGETS = $(basename $(SOURCES))
 
-all: main
 
-main: $(INIT_SHADER_OBJ)
-	g++ -Wall -g -O2 main.cpp $(LDLIBS) -o main -std=c++2a
+INIT_SHADER = common/initshader.o
 
+CXXOPTS = -mwin32 -g -std=c++2a
+CXXDEFS = -DFREEGLUT_STATIC -DGLEW_STATIC
+CXXINCS = -Iinclude
+
+CXXFLAGS = $(CXXOPTS) $(CXXDEFS) $(CXXINCS)
+
+
+
+LDOPTS =
+LDDIRS =
+LDLIBS = -lopengl32 -lglew32 -lfreeglut -lgdi32 -lwinmm
+
+LDFLAGS = $(LDOPTS) $(LDDIRS) $(LDLIBS)
+
+DIRT = $(wildcard *.o *.i *~ */*~ *.log)
+#-----------------------------------------------------------------------------
+
+.PHONY: Makefile
+
+default all: $(TARGETS)
+
+$(TARGETS): $(INIT_SHADER)
+
+%: %.cpp
+	$(CXX) $(CXXFLAGS) $^ $(LDFLAGS) -o $@
+
+#-----------------------------------------------------------------------------
+
+%.i: %.cpp
+	$(CXX) -E $(CXXFLAGS) $< | uniq > $@
+
+#-----------------------------------------------------------------------------
 
 clean:
-	rm main
+	$(RM) $(DIRT)
+
+rmtargets:
+	$(RM) $(TARGETS)
+
+clobber: clean rmtargets
