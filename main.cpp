@@ -6,12 +6,14 @@ int main() {
     mat<2> x(s,v);
     mat<2> yy(10.0, 20, 30, 40);
     mat<2> qq(yy);
+    std::cout << s << std::endl;
     
     std::cout << x << std::endl;
     std::cout << yy << std::endl;
+    std::cout << qq << std::endl;
     //
     const GLfloat *pt = qq;
-    for(int i=0;i<8;i++) {
+    for(int i=0;i<4;i++) {
         std::cout << *pt << std::endl;
         pt++;
     }
