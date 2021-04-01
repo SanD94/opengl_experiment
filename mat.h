@@ -10,18 +10,18 @@ namespace Sand {
 template<int N>
 class mat {
 
-    std::vector<vec<N>> m;
+    std::array<vec<N>, N> m;
 
 private:
     // vector generator init for float
     template<int curm, int curv, typename T>
-    void vec_generate(std::vector<T> &v) {
+    void vec_generate(std::array<T, N> &v) {
         m[curm] = vec<N>(v);
     }
     
     // vector generator recursion for float
     template<int curm, int curv, typename... T, typename U>
-    void vec_generate(std::vector<U> &v, U first, T... rest) {
+    void vec_generate(std::array<U, N> &v, U first, T... rest) {
         if constexpr (curv == N) {
             m[curm] = vec<N>(v);
             vec_generate<curm+1, 0>(v, first, rest...);
@@ -37,8 +37,7 @@ private:
     void mat_float(T... vals) {
         static_assert(N * N == sizeof...(vals),
              "The number of parameters should be N square.");
-        m = std::vector<vec<N>>(N);
-        auto v = std::vector<GLfloat>(N);
+        auto v = std::array<GLfloat, N>();
         vec_generate<0, 0>(v, vals...); 
     }
 
@@ -47,7 +46,7 @@ private:
     void mat_vec(T&&... vals) {
         static_assert(N == sizeof...(vals), 
             "The number of parameters should be N");
-        m = std::vector<vec<N>>{vals...};
+        m = std::array<vec<N>, N>{vals...};
     }
     
     
@@ -60,13 +59,12 @@ public:
     //
 
     mat(const GLfloat d = GLfloat(1.0))  { // Diagonal
-        m = std::vector<vec<N>>(N);
         for(int i = 0; i < N; i++)
             m[i][i] = d;
     }
 
     template<typename... Fs, 
-        std::enable_if_t<std::conjunction_v<std::is_arithmetic<Fs>...>, bool> = true
+        std::enable_if_t<std::conjunction_v<std::is_arithmetic<Fs>...> && (sizeof...(Fs) > 1), bool> = true
     >
     mat(const Fs&... vals) {
         mat_float(static_cast<GLfloat>(vals)...);
@@ -81,32 +79,32 @@ public:
     
 
     mat(const mat<N>& m) : m(m.m) {}
-    mat(const std::vector<vec<N>>& _m) : m(_m) {}
+    mat(const std::array<vec<N>, N>& _m) : m(_m) {}
 
     vec<N>& operator [] (int i) { return m[i]; }
     const vec<N>& operator [] (int i) const { return m[i]; }
 
     mat operator-() const {
-        std::vector<vec<N>> res(N);
+        std::array<vec<N>, N> res;
         std::transform(m.begin(), m.end(), res.begin(),
             [](vec<N> v) -> vec<N> { return -v; });
         return mat(res);
     }
 
     mat operator + (const mat& _m) const {
-        std::vector<vec<N>> res(N);
+        std::array<vec<N>, N> res;
         std::transform(m.begin(), m.end(), _m.m.begin(), res.begin(), std::plus<>{}); 
         return mat(res);
     }
 
     mat operator - (const mat& _m) const {
-        std::vector<vec<N>> res(N);
+        std::array<vec<N>, N> res;
         std::transform(m.begin(), m.end(), _m.m.begin(), res.begin(), std::minus<>{});
         return mat(res);
     }
 
     mat operator * (const GLfloat s) const {
-        std::vector<vec<N>> res(N);
+        std::array<vec<N>, N> res;
         std::transform(m.begin(), m.end(), res.begin(),
                 [s](vec<N> v) -> vec<N> { return s * v; });
         return mat(res);
@@ -116,7 +114,7 @@ public:
     { return m * s; }
 
     mat operator * (const mat& _m) const {
-        std::vector<vec<N>> res(N);
+        std::array<vec<N>, N> res;
         for (int i = 0; i < N; i++)
             for(int j = 0; j < N; j++)
                 for (int k = 0; k < N; k++)
@@ -125,7 +123,7 @@ public:
     }
 
     vec<N> operator * (const vec<N>& v) const {
-        std::vector<GLfloat> res(N);
+        std::array<GLfloat, N> res;
         std::transform(m.m.begin(), m.m.end(), res.begin(),
                 [v](vec<N> _v) -> GLfloat { return dot(v, _v); });
         return vec(res);
@@ -176,7 +174,7 @@ public:
         return static_cast<const GLfloat*>(m[0]);
     }
 
-    operator GLfloat* () const {
+    operator GLfloat* () {
         return static_cast<GLfloat*>(m[0]);
     }
 };
@@ -186,14 +184,14 @@ public:
 
 template<int N>
 inline mat<N> matrixCompMult(const mat<N>& A, const mat<N>& B) {
-    std::vector<vec<N>> res(N);
+    std::array<vec<N>, N> res;
     std::transform(A.begin(), A.end(), B.begin(), res.begin(), std::multiplies<>{});
     return mat(res);
 }
 
 template<int N>
 inline mat<N> transpose(const mat<N>& A) {
-    std::vector<vec<N>> res(N, vec<N>(0));
+    std::array<vec<N>, N> res;
     for(int i=0;i<N;i++) for(int j=0;j<N;j++) res[j][i] = A[i][j];
     return mat(res);
 }

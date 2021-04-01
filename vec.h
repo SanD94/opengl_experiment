@@ -5,8 +5,8 @@
 
 namespace Sand {
 
-template<typename T>
-std::ostream& operator << (std::ostream& os, const std::vector<T> v) {
+template<typename T, size_t N>
+std::ostream& operator << (std::ostream& os, const std::array<T, N> v) {
     std::copy(v.begin(), v.end()-1, std::ostream_iterator<T>(os, ", "));
     os << *(v.end() - 1);
     return os; 
@@ -14,27 +14,28 @@ std::ostream& operator << (std::ostream& os, const std::vector<T> v) {
 
 template <int N>
 struct vec {
-    std::vector<GLfloat> v;
+    std::array<GLfloat, N> v;
 
     vec(GLfloat s = GLfloat(0.0)) {
-        v = std::vector<GLfloat>(N, s);
+        v.fill(s);
     }
 
-    template<typename... T>
+    template<typename... T, 
+        std::enable_if_t<(sizeof...(T) > 1), bool> = true
+    >
     vec(T... vals) {
         static_assert(N == sizeof...(vals), "[vec] : Parameter size should be N");
-        v = std::vector<GLfloat>{static_cast<GLfloat>(vals)...};
+        v = {static_cast<GLfloat>(vals)...};
     }
     
 
     vec(const vec& v) : v(v.v) {}
-    vec(const std::vector<GLfloat>& _v) : v(_v) {}
+    vec(const std::array<GLfloat, N>& _v) : v(_v) {}
     
     template<int I, typename... T>
     vec(const vec<I>& _v, T... vals) {
         static_assert(N == I + sizeof...(vals), "[vec]: Total parameter size should be N");
         auto rest = std::vector<GLfloat>{static_cast<GLfloat>(vals)...};
-        v = std::vector<GLfloat>(N);
         std::copy(_v.v.begin(), _v.v.end(), v.begin());
         std::copy(rest.begin(), rest.end(), v.begin() + I);
     }
@@ -44,33 +45,33 @@ struct vec {
     const GLfloat operator[](int i) const { return v[i]; } // rvalue
 
     vec operator-() const {
-        std::vector<GLfloat> res(N);
+        std::array<GLfloat,N> res;
         std::transform(v.begin(), v.end(), res.begin(), 
             [](GLfloat x) -> GLfloat { return -x; });
         return vec(res);
     }
     
     vec operator+ (const vec& _v) const { 
-        std::vector<GLfloat> res(N);
+        std::array<GLfloat, N> res;
         std::transform(v.begin(), v.end(), _v.v.begin(), res.begin(), std::plus<>{});
         return vec(res);
     }
     
     vec operator- (const vec& _v) const {
-        std::vector<GLfloat> res(N);
+        std::array<GLfloat, N> res;
         std::transform(v.begin(), v.end(), _v.v.begin(), res.begin(), std::minus<>{});
         return vec(res);
     }
     
     vec operator * (const GLfloat s) const { 
-        std::vector<GLfloat> res(N);
+        std::array<GLfloat, N> res;
         std::transform(v.begin(), v.end(), res.begin(), 
             [s](GLfloat x) -> GLfloat { return s * x; });
         return vec(res);
     }
 
     vec operator * (const vec& _v) const { 
-        std::vector<GLfloat> res(N);
+        std::array<GLfloat, N> res;
         std::transform(v.begin(), v.end(), _v.v.begin(), res.begin(), std::multiplies<>{});
         return vec(res);
     }

@@ -1,21 +1,20 @@
 #include "sand.h"
 
 int main() {
-    vec<2> s(20, 10);
-    vec<2> v(10, 1000);
-    mat<2> x(s,v);
-    mat<2> yy(10.0, 20, 30, 40);
-    mat<2> qq(yy);
+    vec<5> s(10,20,10,20,50);
+    vec<2> t(10);
+    vec<2> q(t);
+    std::cout << s << std::endl;
+    t[1] = 0;
+    std::cout << t << std::endl;
+    std::cout << q << std::endl;
+    mat<2> a(20);
+    mat<2> tt(10, 20, 40, 30);
+    std::cout << a << std::endl;
     
-    std::cout << x << std::endl;
-    std::cout << yy << std::endl;
-    //
-    const GLfloat *pt = qq;
-    for(int i=0;i<8;i++) {
-        std::cout << *pt << std::endl;
-        pt++;
-    }
-    
+    tt[0][1] = 10;
+    float* ss = tt;
+    for(int i=0;i<4;i++) { std::cout << *ss << std::endl; ss++;}
 
     return 0;
 }
