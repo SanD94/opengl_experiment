@@ -17,15 +17,15 @@ struct vec {
     std::array<GLfloat, N> v;
 
     vec(GLfloat s = GLfloat(0.0)) {
-        std::vector<GLfloat> t(N, s);
-        std::copy_n(t.begin(), N, v.begin());
+        v.fill(s);
     }
 
-    template<typename... T>
+    template<typename... T, 
+        std::enable_if_t<(sizeof...(T) > 1), bool> = true
+    >
     vec(T... vals) {
         static_assert(N == sizeof...(vals), "[vec] : Parameter size should be N");
-        auto t = std::vector<GLfloat>{static_cast<GLfloat>(vals)...};
-        std::copy_n(t.begin(), N, v.begin());
+        v = {static_cast<GLfloat>(vals)...};
     }
     
 
@@ -36,10 +36,8 @@ struct vec {
     vec(const vec<I>& _v, T... vals) {
         static_assert(N == I + sizeof...(vals), "[vec]: Total parameter size should be N");
         auto rest = std::vector<GLfloat>{static_cast<GLfloat>(vals)...};
-        auto t = std::vector<GLfloat>(N);
-        std::copy(_v.v.begin(), _v.v.end(), t.begin());
-        std::copy(rest.begin(), rest.end(), t.begin() + I);
-        std::copy_n(t.begin(), N, v.begin());
+        std::copy(_v.v.begin(), _v.v.end(), v.begin());
+        std::copy(rest.begin(), rest.end(), v.begin() + I);
     }
 
 
