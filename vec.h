@@ -124,11 +124,11 @@ struct vec {
 
     // Conversion
     operator const GLfloat* () const {
-        return static_cast<const GLfloat*>(&v[0]);
+        return static_cast<const GLfloat*>(v.data());
     }
     
     operator GLfloat* () {
-        return static_cast<GLfloat*>(&v[0]);
+        return static_cast<GLfloat*>(v.data());
     }
     
 };

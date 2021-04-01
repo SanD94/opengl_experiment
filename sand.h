@@ -5,6 +5,8 @@
 #include <cmath>
 #include <iostream>
 #include <vector>
+#include <array>
+
 #include <functional>
 #include <algorithm>
 #include <iterator>

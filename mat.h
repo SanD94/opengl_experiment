@@ -173,11 +173,11 @@ public:
     // Conversion operators
 
     operator const GLfloat* () const {
-        return static_cast<const GLfloat*>(&m[0][0]);
+        return static_cast<const GLfloat*>(m[0]);
     }
 
     operator GLfloat* () const {
-        return static_cast<GLfloat*>(&m[0][0]);
+        return static_cast<GLfloat*>(m[0]);
     }
 };
 

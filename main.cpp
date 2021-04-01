@@ -10,7 +10,12 @@ int main() {
     std::cout << x << std::endl;
     std::cout << yy << std::endl;
     //
-    std::cout << qq[0][0] << std::endl;
+    const GLfloat *pt = qq;
+    for(int i=0;i<8;i++) {
+        std::cout << *pt << std::endl;
+        pt++;
+    }
+    
 
     return 0;
 }
