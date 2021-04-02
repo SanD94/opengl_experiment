@@ -11,6 +11,6 @@ FROM gitpod/workspace-full-vnc
 # neovim
 
 RUN sudo apt update \
-    && sudo apt install neovim mesa-utils fzf \
+    && sudo apt-get install -y neovim mesa-utils fzf \
     && git config --global user.name "Safa Andac" \
     && git config --global user.email "8544658+SanD94@users.noreply.github.com" \
