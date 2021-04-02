@@ -1,0 +1,4 @@
+// the configured options and settings for opengl experiment
+#define opengl_experiment_VERSION_MAJOR @opengl_experiment_VERSION_MAJOR@
+#define opengl_experiment_VERSION_MINOR @opengl_experiment_VERSION_MINOR@
+#cmakedefine USE_SAND

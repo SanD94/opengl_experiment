@@ -1,4 +1,6 @@
+#ifdef USE_SAND
 #include "sand.h"
+#endif
 
 int main() {
     vec<5> s(10,20,10,20,50);
@@ -15,6 +17,5 @@ int main() {
     tt[0][1] = 10;
     float* ss = tt;
     for(int i=0;i<4;i++) { std::cout << *ss << std::endl; ss++;}
-
     return 0;
 }
