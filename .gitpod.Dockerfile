@@ -12,5 +12,6 @@ FROM gitpod/workspace-full-vnc
 RUN sudo apt update \
     && sudo apt-get install -y fzf neovim \
     && sudo apt-get install -y mesa-utils freeglut3-dev libglew-dev\
+    && sudo rm -rf /var/lib/apt/lists/* \
     && git config --global user.name "Safa Andac" \
     && git config --global user.email "8544658+SanD94@users.noreply.github.com" \
