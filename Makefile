@@ -17,7 +17,7 @@ CXXFLAGS = $(CXXOPTS) $(CXXDEFS) $(CXXINCS)
 
 LDOPTS =
 LDDIRS =
-LDLIBS = -lopengl32 -lglew32 -lfreeglut -lgdi32 -lwinmm
+LDLIBS = -lgl -lGLEW -lglut
 
 LDFLAGS = $(LDOPTS) $(LDDIRS) $(LDLIBS)
 
