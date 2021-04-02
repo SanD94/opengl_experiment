@@ -5,3 +5,12 @@ FROM gitpod/workspace-full-vnc
 # RUN brew install bastet
 #
 # More information: https://www.gitpod.io/docs/config-docker/
+
+
+# mesa-utils : OpenGL part
+# neovim
+
+RUN sudo apt update \
+    && sudo apt install neovim mesa-utils fzf
+    && git config --global user.name "Safa Andac"
+    && git config --global user.email "8544658+SanD94@users.noreply.github.com"
