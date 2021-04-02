@@ -1,8 +1,13 @@
+#include "opengl_experiment_config.h"
+
 #ifdef USE_SAND
-#include "sand.h"
+#   include "sand.h"
 #endif
 
+
+
 int main() {
+    #ifdef USE_SAND
     vec<5> s(10,20,10,20,50);
     vec<2> t(10);
     vec<2> q(t);
@@ -17,5 +22,6 @@ int main() {
     tt[0][1] = 10;
     float* ss = tt;
     for(int i=0;i<4;i++) { std::cout << *ss << std::endl; ss++;}
+    #endif
     return 0;
 }
