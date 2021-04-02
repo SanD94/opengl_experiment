@@ -7,7 +7,7 @@ TARGETS = $(basename $(SOURCES))
 
 INIT_SHADER = common/initshader.o
 
-CXXOPTS = -g -std=c++2a
+CXXOPTS = -mwin32 -g -std=c++2a
 CXXDEFS = -DFREEGLUT_STATIC -DGLEW_STATIC
 CXXINCS = -Iinclude
 
@@ -17,7 +17,7 @@ CXXFLAGS = $(CXXOPTS) $(CXXDEFS) $(CXXINCS)
 
 LDOPTS =
 LDDIRS =
-LDLIBS = -lGL -lGLEW -lglut
+LDLIBS = -lgl -lGLEW -lglut
 
 LDFLAGS = $(LDOPTS) $(LDDIRS) $(LDLIBS)
 
